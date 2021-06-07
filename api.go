@@ -36,6 +36,9 @@ func ComposeDecodeHookFunc(fs ...DecodeHookFunc) mapstructure.DecodeHookFunc {
 				return ctx.Data, nil
 			}
 		}
+		if ctx.Data == nil {
+			ctx.Data = reflect.New(t).Interface()
+		}
 		return ctx.Data, nil
 	}
 }
