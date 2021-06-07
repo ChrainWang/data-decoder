@@ -68,8 +68,11 @@ func unmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
 		mapKeyVal := reflect.ValueOf(fieldName)
 		// envalue decode context for field
 		fieldDecodeCtx := &DecodeContext{
-			Data:     dataVal.MapIndex(mapKeyVal).Interface(),
 			QueryKey: strings.Join([]string{ctx.QueryKey, fieldName}, "."),
+		}
+		dataVal := dataVal.MapIndex(mapKeyVal)
+		if dataVal.IsValid() {
+			fieldDecodeCtx.Data = dataVal.Interface()
 		}
 		// set up query option for field
 		if ctx.QueryOption == QO_NO {
