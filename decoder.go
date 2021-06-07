@@ -34,9 +34,11 @@ func (d *Decoder) getDecoder(output interface{}) (*mapstructure.Decoder, error) 
 	c := &mapstructure.DecoderConfig{
 		Result: output,
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
-			d.queryDataHookFunc(),
-			ComposeDecodeHookFunc(DecodeStructuredString),
-			ComposeDecodeHookFunc(UnmarshalMapToStruct),
+			ComposeDecodeHookFunc(
+				d.queryData,
+				DecodeStructuredString,
+				UnmarshalMapToStruct,
+			),
 			mapstructure.StringToSliceHookFunc(","),
 			mapstructure.StringToTimeDurationHookFunc(),
 			mapstructure.StringToIPHookFunc(),
