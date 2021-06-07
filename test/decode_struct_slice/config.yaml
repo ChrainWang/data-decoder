@@ -1,0 +1,10 @@
+data:
+  fields:
+    - field1: "1"
+      field2: "1.2"
+      field3: 1
+    - field1: "2"
+      field2: "2.2"
+      field3: 2
+
+  
