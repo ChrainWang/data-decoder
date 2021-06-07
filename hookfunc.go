@@ -23,6 +23,10 @@ func DecodeStructuredString(ctx *DecodeContext, targetType reflect.Type) error {
 }
 
 func UnmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
+	if targetType.Kind() != reflect.Struct {
+		return nil
+	}
+
 	if ctx.Data != nil {
 		return unmarshalMapToStruct(ctx, targetType)
 	}
@@ -45,7 +49,7 @@ func UnmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
 		queryKey := strings.Join([]string{ctx.QueryKey, fieldName}, ".")
 		fieldDecodeCtx := &DecodeContext{
 			QueryKey:    queryKey,
-			QueryOption: QueryOptionType(field.Tag.Get("query-data")),
+			QueryOption: QueryOptionType(field.Tag.Get("query-option")),
 		}
 		m[fieldName] = fieldDecodeCtx
 	}
@@ -54,7 +58,7 @@ func UnmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
 }
 
 func unmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
-	if dataType := reflect.TypeOf(ctx.Data); dataType.Kind() != reflect.Map || targetType.Kind() != reflect.Struct {
+	if dataType := reflect.TypeOf(ctx.Data); dataType.Kind() != reflect.Map {
 		return nil
 	}
 
@@ -70,15 +74,15 @@ func unmarshalMapToStruct(ctx *DecodeContext, targetType reflect.Type) error {
 		fieldDecodeCtx := &DecodeContext{
 			QueryKey: strings.Join([]string{ctx.QueryKey, fieldName}, "."),
 		}
-		dataVal := dataVal.MapIndex(mapKeyVal)
-		if dataVal.IsValid() {
-			fieldDecodeCtx.Data = dataVal.Interface()
+		fieldDataVal := dataVal.MapIndex(mapKeyVal)
+		if fieldDataVal.IsValid() {
+			fieldDecodeCtx.Data = fieldDataVal.Interface()
 		}
 		// set up query option for field
 		if ctx.QueryOption == QO_NO {
 			fieldDecodeCtx.QueryOption = QO_NO
 		} else {
-			fieldDecodeCtx.QueryOption = QueryOptionType(field.Tag.Get("query-data"))
+			fieldDecodeCtx.QueryOption = QueryOptionType(field.Tag.Get("query-option"))
 		}
 		m[fieldName] = fieldDecodeCtx
 	}
