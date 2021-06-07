@@ -1,0 +1,11 @@
+teststring: "string value"
+testmap:
+  field1: "string field value"
+  field2: 2
+  field3: "a,b,c,d,e"
+  field4:
+    - field1: "map1 field 1"
+      field2: 2
+    - field1: "map2 field 1"
+     
+    
